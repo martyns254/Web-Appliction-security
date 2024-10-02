@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Pesa Payments Info</title>
+
+    <!-- Content Security Policy to allow Google Maps and inline styles -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://www.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+
+    <!-- CSS (Inline) -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #049c31;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: white;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #048f2e;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            width: 80%;
+        }
+
+        .close {
+            color: red;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: darkred;
+            cursor: pointer;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to M-Pesa Payments Info</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Send Money</a></li>
+                <li><a href="#">Withdraw Money</a></li>
+                <li><a href="#">Pay Bills</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>About M-Pesa</h2>
+        <p>M-Pesa is a mobile money transfer service that allows users to send and receive money, pay bills, and perform other financial transactions using their mobile phone.</p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section>
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <details>
+            <summary>How do I send money with M-Pesa?</summary>
+            <p>Dial *234#, select “Send Money”, enter the recipient's phone number and the amount, and confirm the transaction.</p>
+        </details>
+        <details>
+            <summary>What is the daily M-Pesa transaction limit?</summary>
+            <p>The daily transaction limit for M-Pesa is KES 300,000.</p>
+        </details>
+        <details>
+            <summary>Can I use M-Pesa to pay bills?</summary>
+            <p>Yes, you can pay bills using M-Pesa by selecting the “Pay Bill” option and entering the paybill number.</p>
+        </details>
+    </section>
+
+    <!-- Search Bar Section -->
+    <section>
+        <h2>Search M-Pesa Services</h2>
+        <input type="text" id="search-bar" placeholder="Search services...">
+        <button onclick="searchService()">Search</button>
+        <p id="search-result"></p>
+    </section>
+
+    <!-- Tutorial Modal Section -->
+    <section>
+        <h2>M-Pesa Tutorials</h2>
+        <button onclick="openModal()">View Tutorial: How to Send Money</button>
+
+        <div id="tutorial-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Tutorial: How to Send Money</h2>
+                <p>Step-by-step instructions on how to send money via M-Pesa...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Form Section -->
+    <section>
+        <h2>Feedback Form</h2>
+        <form id="feedback-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="message">Your Feedback:</label>
+            <textarea id="message" name="message" required></textarea><br><br>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+        <p id="feedback-response"></p>
+    </section>
+
+    <!-- Contact Section with Google Maps -->
+    <section>
+        <h2>Contact Us</h2>
+        <p>Email: support@mpesa-info.com</p>
+        <p>Phone: +254 759 330 299</p>
+
+        <h3>Our Location</h3>
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15958.491871742167!2d36.71977465!3d-1.3455377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1a1b59b8994f%3A0xa0574063de9c2acb!2sCatholic%20University%20of%20Eastern%20Africa!5e0!3m2!1sen!2ske!4v1696260650594!5m2!1sen!2ske" 
+            width="600" 
+            height="450" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy">
+        </iframe>
+    </section>
+
+    <!-- JavaScript (Inline) -->
+    <script>
+        // Sanitize input to prevent XSS attacks
+        function sanitizeInput(input) {
+            const temp = document.createElement('div');
+            temp.innerText = input;
+            return temp.innerHTML;
+        }
+
+        // Search Service JavaScript
+        function searchService() {
+            const searchBar = sanitizeInput(document.getElementById('search-bar').value.toLowerCase());
+            let result = '';
+
+            if (searchBar.includes('send money')) {
+                result = 'You can send money using M-Pesa by dialing *234# or using the M-Pesa app.';
+            } else if (searchBar.includes('withdraw')) {
+                result = 'You can withdraw money at any M-Pesa agent or ATM using the “Withdraw” option on your phone.';
+            } else if (searchBar.includes('pay bills')) {
+                result = 'Use the “Pay Bill” option in M-Pesa to pay your bills. You will need the biller’s paybill number.';
+            } else {
+                result = 'No matching services found.';
+            }
+
+            document.getElementById('search-result').innerText = result;
+        }
+
+        // Modal JavaScript
+        function openModal() {
+            document.getElementById('tutorial-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('tutorial-modal').style.display = 'none';
+        }
+
+        // Validate email format
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        // Feedback Form JavaScript with input sanitization and validation
+        document.getElementById('feedback-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get sanitized input
+            const name = sanitizeInput(document.getElementById('name').value);
+            const email = sanitizeInput(document.getElementById('email').value);
+            const message = sanitizeInput(document.getElementById('message').value);
+
+            // Validate email format
+            if (!validateEmail(email)) {
+                document.getElementById('feedback-response').innerText = 'Please enter a valid email address.';
+                return;
+            }
+
+            if (name && email && message) {
+                document.getElementById('feedback-response').innerText = 'Thank you for your feedback, ' + name + '!';
+            } else {
+                document.getElementById('feedback-response').innerText = 'Please fill out all fields.';
+            }
+        });
+    </script>
+</body>
+</html>
